@@ -21,6 +21,8 @@
  */
 package inra.ijpb.plugins;
 
+import java.awt.AWTEvent;
+
 import ij.ImagePlus;
 import ij.gui.DialogListener;
 import ij.gui.GenericDialog;
@@ -29,10 +31,10 @@ import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.ImageProcessor;
 import inra.ijpb.algo.DefaultAlgoListener;
 import inra.ijpb.morphology.Strel;
-import inra.ijpb.morphology.directional.OrientedLineStrelFactory;
 import inra.ijpb.morphology.directional.DirectionalFilter.Operation;
-
-import java.awt.AWTEvent;
+import inra.ijpb.morphology.directional.OrientedLineStrelFactory;
+import inra.ijpb.morphology.strel.CompositeStrel;
+import inra.ijpb.morphology.strel.SquareStrel;
 
 public class DirectionalFilterPlugin implements ExtendedPlugInFilter, DialogListener 
 {
@@ -55,7 +57,7 @@ public class DirectionalFilterPlugin implements ExtendedPlugInFilter, DialogList
 	Operation op = Operation.OPENING;
 	int lineLength = 20;
     double orientation = 0.0;
-//    int lineThickness = 1; 
+    int lineThickness = 1; 
 
 	
 	@Override
@@ -95,7 +97,7 @@ public class DirectionalFilterPlugin implements ExtendedPlugInFilter, DialogList
 		gd.addChoice("Operation", Operation.getAllLabels(), this.op.toString());
 		gd.addNumericField("Line Length", this.lineLength, 0, 6, "pixels");
 		gd.addNumericField("Orientation", this.orientation, 1, 6, "degrees");
-//        gd.addNumericField("Thickness", this.lineThickness, 0, 6, "pixels");
+        gd.addNumericField("Thickness", this.lineThickness, 0, 6, "pixels");
         
 		gd.addPreviewCheckbox(pfr);
 		gd.addDialogListener(this);
@@ -131,20 +133,21 @@ public class DirectionalFilterPlugin implements ExtendedPlugInFilter, DialogList
 	@Override
 	public void run(ImageProcessor image)
 	{
-//		IJ.log("Run directional filter");
-
-		// create orientated Structuring element
+		// create oriented structuring element
 		Strel strel = new OrientedLineStrelFactory(lineLength).createStrel(this.orientation);
-        DefaultAlgoListener.monitor(strel);
-		
+        
+        // Optionally "thickens" the structuring element 
+        if (this.lineThickness > 1)
+        {
+            Strel squareStrel = SquareStrel.fromDiameter(this.lineThickness);
+            strel = new CompositeStrel(strel, squareStrel);
+        }
+
         // Apply oriented filter
+        DefaultAlgoListener.monitor(strel);
         this.result = this.op.apply(image, strel);
         
-//        if (this.lineThickness > 1)
-//        {
-//            Strel se2 = SquareStrel.fromDiameter(this.lineThickness) 
-//        }
-
+        // Update preview if necessary
 		if (previewing)
 		{
 			// Fill up the values of original image with values of the result
