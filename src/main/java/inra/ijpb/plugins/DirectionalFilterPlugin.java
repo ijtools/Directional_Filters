@@ -56,8 +56,10 @@ public class DirectionalFilterPlugin implements ExtendedPlugInFilter, DialogList
 
 	Operation op = Operation.OPENING;
 	int lineLength = 20;
+    int lineThickness = 1;
+    
+    /** The orientation of the structuring element, in degrees. */
     double orientation = 0.0;
-    int lineThickness = 1; 
 
 	
 	@Override
@@ -96,8 +98,9 @@ public class DirectionalFilterPlugin implements ExtendedPlugInFilter, DialogList
 		
 		gd.addChoice("Operation", Operation.getAllLabels(), this.op.toString());
 		gd.addNumericField("Line Length", this.lineLength, 0, 6, "pixels");
-		gd.addNumericField("Orientation", this.orientation, 1, 6, "degrees");
         gd.addNumericField("Thickness", this.lineThickness, 0, 6, "pixels");
+//        gd.addNumericField("Orientation", this.orientation, 1, 6, "degrees");
+        gd.addSlider("Orientation", 0.0, 180.0, this.orientation, 1.0);
         
 		gd.addPreviewCheckbox(pfr);
 		gd.addDialogListener(this);
@@ -126,7 +129,8 @@ public class DirectionalFilterPlugin implements ExtendedPlugInFilter, DialogList
 	private void parseDialogParameters(GenericDialog gd) {
 		// extract chosen parameters
 		this.op 			= Operation.fromLabel(gd.getNextChoice());
-		this.lineLength 	= (int) gd.getNextNumber();
+        this.lineLength     = (int) gd.getNextNumber();
+        this.lineThickness  = (int) gd.getNextNumber();
 		this.orientation 	= (int) gd.getNextNumber();
 	}
 
