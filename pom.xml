@@ -8,11 +8,11 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>26.0.0</version>
+		<version>31.1.0</version>
 		<relativePath />
 	</parent>
 
-	<groupId>fr.inra.ijpb</groupId>
+	<groupId>net.ijtools</groupId>
 	<artifactId>Directional_Filters</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 
@@ -21,8 +21,8 @@
 	<url>https://github.com/ijtools/Directional_Filters</url>
 	<inceptionYear>2020</inceptionYear>
 	<organization>
-		<name>INRAE-IJPB Modeling and Digital Imaging lab</name>
-		<url>http://www-ijpb.versailles.inra.fr/en/bc/equipes/modelisation-imagerie/</url>
+		<name>INRAE</name>
+		<url>https://www.inrae.fr/</url>
 	</organization>
 	<licenses>
 		<license>
