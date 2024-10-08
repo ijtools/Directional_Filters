@@ -9,8 +9,8 @@ import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import inra.ijpb.algo.AlgoEvent;
 import inra.ijpb.algo.AlgoListener;
+import inra.ijpb.data.image.ImageUtils;
 import inra.ijpb.morphology.Strel;
-import inra.ijpb.util.IJUtils;
 
 /**
  * A structuring element obtained by the composition of several structuring elements.
@@ -280,6 +280,6 @@ public class CompositeStrel extends AbstractStrel implements AlgoListener
         image.set(5, 5, 255);
         ImageProcessor image2 = strel.dilation(image);
         
-        IJUtils.printImage(image2);       
+        ImageUtils.print(image2);
     }
 }
