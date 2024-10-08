@@ -14,7 +14,7 @@
 
 	<groupId>net.ijtools</groupId>
 	<artifactId>Directional_Filters</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.2-SNAPSHOT</version>
 
 	<name>Directional Filters</name>
 	<description>Additional Morphological Directional filters for MorphoLibJ.</description>
