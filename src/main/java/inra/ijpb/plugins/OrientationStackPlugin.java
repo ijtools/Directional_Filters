@@ -31,20 +31,17 @@ public class OrientationStackPlugin implements PlugIn
 		
 		gd.addChoice("Operation", Operation.getAllLabels(), Operation.OPENING.toString());
 		gd.addNumericField("Line_Length", 20, 0, 6, "pixels");
-        gd.addNumericField("Line_Thickness", 1, 0, 6, "pixels");
+		gd.addNumericField("Line_Thickness", 1, 0, 6, "pixels");
 		gd.addNumericField("Direction Number", 60, 0);
-		
-        gd.showDialog();        
-        if (gd.wasCanceled()) 
-        {
-			return;
-        }
-        
+
+		gd.showDialog();
+		if (gd.wasCanceled()) return;
+
 		// extract chosen parameters
-        Operation operation = Operation.fromLabel(gd.getNextChoice());
-		int lineLength 	= (int) gd.getNextNumber();
-        int lineThickness = (int) gd.getNextNumber();
-        int nDirections = (int) gd.getNextNumber();
+		Operation operation = Operation.fromLabel(gd.getNextChoice());
+		int lineLength = (int) gd.getNextNumber();
+		int lineThickness = (int) gd.getNextNumber();
+		int nDirections = (int) gd.getNextNumber();
 		
 		int sizeX = image.getWidth();
 		int sizeY = image.getHeight();

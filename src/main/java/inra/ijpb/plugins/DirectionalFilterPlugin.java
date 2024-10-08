@@ -56,12 +56,11 @@ public class DirectionalFilterPlugin implements ExtendedPlugInFilter, DialogList
 
 	Operation op = Operation.OPENING;
 	int lineLength = 20;
-    int lineThickness = 1;
-    
-    /** The orientation of the structuring element, in degrees. */
-    double orientation = 0.0;
+	int lineThickness = 1;
 
-	
+	/** The orientation of the structuring element, in degrees. */
+	double orientation = 0.0;
+
 	@Override
 	public int setup(String arg, ImagePlus imp)
 	{
@@ -90,30 +89,26 @@ public class DirectionalFilterPlugin implements ExtendedPlugInFilter, DialogList
 	public int showDialog(ImagePlus imp, String command, PlugInFilterRunner pfr)
 	{
 		// Normal setup
-    	this.imagePlus = imp;
-    	this.baseImage = imp.getProcessor().duplicate();
+		this.imagePlus = imp;
+		this.baseImage = imp.getProcessor().duplicate();
 
 		// Create the configuration dialog
 		GenericDialog gd = new GenericDialog("Directional Filter");
-		
+
 		gd.addChoice("Operation", Operation.getAllLabels(), this.op.toString());
 		gd.addNumericField("Line Length", this.lineLength, 0, 6, "pixels");
-        gd.addNumericField("Thickness", this.lineThickness, 0, 6, "pixels");
-//        gd.addNumericField("Orientation", this.orientation, 1, 6, "degrees");
-        gd.addSlider("Orientation", 0.0, 180.0, this.orientation, 1.0);
-        
+		gd.addNumericField("Thickness", this.lineThickness, 0, 6, "pixels");
+		gd.addSlider("Orientation", 0.0, 180.0, this.orientation, 1.0);
+
 		gd.addPreviewCheckbox(pfr);
 		gd.addDialogListener(this);
-        previewing = true;
-        gd.showDialog();
-        previewing = false;
-        if (gd.wasCanceled()) 
-        {
-			return DONE;
-        }
-        
-    	parseDialogParameters(gd);
-			
+		previewing = true;
+		gd.showDialog();
+		previewing = false;
+		if (gd.wasCanceled()) return DONE;
+
+		parseDialogParameters(gd);
+
 		// clean up an return 
 		gd.dispose();
 		return flags;
@@ -123,15 +118,16 @@ public class DirectionalFilterPlugin implements ExtendedPlugInFilter, DialogList
 	public boolean dialogItemChanged(GenericDialog gd, AWTEvent e)
 	{
 		parseDialogParameters(gd);
-    	return true;
-    }
+		return true;
+	}
 
-	private void parseDialogParameters(GenericDialog gd) {
+	private void parseDialogParameters(GenericDialog gd)
+	{
 		// extract chosen parameters
-		this.op 			= Operation.fromLabel(gd.getNextChoice());
-        this.lineLength     = (int) gd.getNextNumber();
-        this.lineThickness  = (int) gd.getNextNumber();
-		this.orientation 	= (int) gd.getNextNumber();
+		this.op = Operation.fromLabel(gd.getNextChoice());
+		this.lineLength = (int) gd.getNextNumber();
+		this.lineThickness = (int) gd.getNextNumber();
+		this.orientation = (int) gd.getNextNumber();
 	}
 
 	@Override
@@ -139,27 +135,27 @@ public class DirectionalFilterPlugin implements ExtendedPlugInFilter, DialogList
 	{
 		// create oriented structuring element
 		Strel strel = new OrientedLineStrelFactory(lineLength).createStrel(this.orientation);
-        
-        // Optionally "thickens" the structuring element 
-        if (this.lineThickness > 1)
-        {
-            Strel squareStrel = SquareStrel.fromDiameter(this.lineThickness);
-            strel = new CompositeStrel(strel, squareStrel);
-        }
 
-        // Apply oriented filter
-        DefaultAlgoListener.monitor(strel);
-        this.result = this.op.apply(image, strel);
-        
-        // Update preview if necessary
+		// Optionally "thickens" the structuring element
+		if (this.lineThickness > 1)
+		{
+			Strel squareStrel = SquareStrel.fromDiameter(this.lineThickness);
+			strel = new CompositeStrel(strel, squareStrel);
+		}
+
+		// Apply oriented filter
+		DefaultAlgoListener.monitor(strel);
+		this.result = this.op.apply(image, strel);
+
+		// Update preview if necessary
 		if (previewing)
 		{
 			// Fill up the values of original image with values of the result
 			for (int i = 0; i < image.getPixelCount(); i++)
 			{
-    			image.set(i, result.get(i));
-    		}
-        }
+				image.set(i, result.get(i));
+			}
+		}
 	}
 
 	@Override
